@@ -35,8 +35,9 @@ export default class PlateauMemory {
     this._conteneur.style.setProperty('--colonnes-memory', this._difficulte.colonnes);
 
     const cartesMelangees = melangerFisherYates(cartes);
-    cartesMelangees.forEach(carte => {
+    cartesMelangees.forEach((carte, index) => {
       const element = this._creerElementCarte(carte);
+      element.style.setProperty('--carte-index', index);
       this._elementsCartes.set(carte.id, element);
       this._conteneur.appendChild(element);
     });
@@ -107,6 +108,15 @@ export default class PlateauMemory {
   deverrouillerTout() {
     this._elementsCartes.forEach(element => {
       element.classList.remove(CSS_CARTE_VERROUILLEE);
+    });
+  }
+
+  signalerIncorrect(id1, id2) {
+    [id1, id2].forEach(id => {
+      const el = this._elementsCartes.get(id);
+      if (!el) return;
+      el.classList.add('carte--incorrecte');
+      setTimeout(() => el.classList.remove('carte--incorrecte'), 600);
     });
   }
 

@@ -1,74 +1,391 @@
+/* =====================================================
+   MEMORY — Styles et animations
+   ===================================================== */
+
+/* ---- Keyframes ---- */
+
+@keyframes carteEntree {
+  from {
+    opacity: 0;
+    transform: scale(0.6) rotateY(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+@keyframes carteReussie {
+  0%   { box-shadow: 0 0 0 0    rgba(46, 204, 113, 0.9); }
+  60%  { box-shadow: 0 0 0 14px rgba(46, 204, 113, 0);   }
+  100% { box-shadow: 0 0 0 0    rgba(46, 204, 113, 0);   }
+}
+
+@keyframes carteSecoue {
+  0%, 100% { transform: translateX(0);   }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px);  }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px);  }
+}
+
+@keyframes overlayEntree {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes pulseTick {
+  50% { color: var(--couleur-accent); }
+}
+
+@keyframes scoreCompte {
+  from { transform: scale(1.2); color: var(--couleur-accent); }
+  to   { transform: scale(1);   color: var(--couleur-texte);  }
+}
+
+/* =====================================================
+   Conteneur principal
+   ===================================================== */
+
 .jeu-memory {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: var(--espace-xl);
 }
 
-/* Grille */
-.plateau-memory {
+/* =====================================================
+   HUD
+   ===================================================== */
+
+.jeu-memory .hud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--espace-xs) var(--espace-md);
+  width: 100%;
+  padding: var(--espace-sm) var(--espace-md);
+  background-color: var(--couleur-surface);
+  border-bottom: 1px solid var(--couleur-bordure);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.jeu-memory .hud__profil {
+  font-weight: 700;
+  color: var(--couleur-accent);
+  font-size: var(--taille-texte-sm);
+  white-space: nowrap;
+}
+
+.jeu-memory .hud__paires,
+.jeu-memory .hud__temps,
+.jeu-memory .hud__score {
+  font-size: var(--taille-texte-sm);
+  color: var(--couleur-texte-subtil);
+  white-space: nowrap;
+}
+
+.jeu-memory .hud__score {
+  font-weight: 600;
+  color: var(--couleur-texte);
+}
+
+.jeu-memory .hud__score--anime {
+  animation: scoreCompte 0.35s ease-out both;
+}
+
+.jeu-memory .hud__temps--tick {
+  animation: pulseTick 0.3s ease-out;
+}
+
+.jeu-memory .hud__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--espace-xs);
+  margin-left: auto;
+}
+
+.jeu-memory .hud__difficulte {
+  padding: var(--espace-xs) var(--espace-sm);
+  background-color: var(--couleur-fond);
+  color: var(--couleur-texte);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  font-family: inherit;
+  font-size: var(--taille-texte-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-rapide);
+}
+
+.jeu-memory .hud__difficulte:focus {
+  outline: none;
+  border-color: var(--couleur-accent);
+}
+
+.jeu-memory .hud__difficulte:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.jeu-memory .hud__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espace-xs) var(--espace-sm);
+  background-color: var(--couleur-fond);
+  color: var(--couleur-texte-subtil);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  font-family: inherit;
+  font-size: var(--taille-texte-sm);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--transition-rapide),
+              color var(--transition-rapide),
+              border-color var(--transition-rapide),
+              transform var(--transition-rapide);
+  user-select: none;
+}
+
+.jeu-memory .hud__btn:hover {
+  background-color: var(--couleur-surface-hover);
+  color: var(--couleur-texte);
+  border-color: var(--couleur-accent);
+}
+
+.jeu-memory .hud__btn:active {
+  transform: scale(0.95);
+}
+
+/* =====================================================
+   Plateau (grille)
+   ===================================================== */
+
+.jeu-memory .plateau-memory {
   display: grid;
-  grid-template-columns: repeat(var(--colonnes-memory), 1fr);
-  gap: 8px;
-  padding: 8px;
+  grid-template-columns: repeat(var(--colonnes-memory, 4), 1fr);
+  gap: clamp(4px, 1.5vmin, 10px);
+  padding: clamp(8px, 2vmin, 16px);
+  width: 100%;
+  max-width: min(96vw, calc(var(--colonnes-memory, 4) * 110px + 80px));
 }
 
-/* Conteneur carte avec perspective 3D */
-.carte {
+/* =====================================================
+   Cartes — 3D flip
+   ===================================================== */
+
+.jeu-memory .carte {
+  --taille-carte: clamp(55px, 13vmin, 100px);
+  width: var(--taille-carte);
+  height: calc(var(--taille-carte) * 1.4);
   perspective: 1000px;
   cursor: pointer;
-  aspect-ratio: 2 / 3;
+
+  /* Entrée staggerée basée sur --carte-index injecté par PlateauMemory */
+  animation: carteEntree 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--carte-index, 0) * 50ms);
 }
 
 /* Intérieur pivotant */
-.carte__interieur {
+.jeu-memory .carte__interieur {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dos et face : superposées, backface cachée */
-.carte__dos,
-.carte__face {
+/* Dos et face superposés, backface masquée */
+.jeu-memory .carte__dos,
+.jeu-memory .carte__face {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  border-radius: 6px;
+  border-radius: var(--rayon-md);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: 1px solid var(--couleur-bordure);
 }
 
-.carte__dos img,
-.carte__face img {
-  width: 100%;
-  height: 100%;
+.jeu-memory .carte__dos {
+  background-color: var(--couleur-surface);
+  /* Motif quadrillé subtil */
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(79, 142, 247, 0.05) 5px,
+    rgba(79, 142, 247, 0.05) 10px
+  );
+}
+
+.jeu-memory .carte__dos img,
+.jeu-memory .carte__face img {
+  width: 70%;
+  height: 70%;
   object-fit: contain;
 }
 
-/* La face est pré-tournée à 180deg : invisible par défaut */
-.carte__face {
+/* La face est pré-tournée : invisible par défaut */
+.jeu-memory .carte__face {
   transform: rotateY(180deg);
   background-color: #fff;
 }
 
-/* Retournement : montre la face, cache le dos */
-.carte--retournee .carte__interieur {
+/* Retournement — montre la face */
+.jeu-memory .carte--retournee .carte__interieur {
   transform: rotateY(180deg);
 }
 
-/* Carte trouvée : légère surbrillance */
-.carte--trouvee .carte__interieur {
+/* Paire trouvée — reste retournée + glow vert animé */
+.jeu-memory .carte--trouvee .carte__interieur {
   transform: rotateY(180deg);
 }
 
-.carte--trouvee .carte__face {
-  background-color: #e8f8e8;
+.jeu-memory .carte--trouvee .carte__face {
+  background-color: #e8fdf0;
+  border-color: var(--couleur-succes);
+  animation: carteReussie 0.7s ease-out 0.5s both;
 }
 
-/* Verrouillage : désactive les clics */
-.carte--verrouillee {
+/* Paire incorrecte — shake sur l'intérieur pour garder le rotateY cohérent */
+.jeu-memory .carte--incorrecte {
+  animation: carteSecoue 0.5s ease-in-out;
+}
+
+/* Verrouillage — désactive les clics */
+.jeu-memory .carte--verrouillee {
   pointer-events: none;
+}
+
+/* Hover : légère élévation (uniquement sur cartes interactives) */
+.jeu-memory .carte:not(.carte--trouvee):not(.carte--verrouillee):hover .carte__interieur {
+  filter: brightness(1.1);
+}
+
+/* =====================================================
+   Overlay fin de partie
+   ===================================================== */
+
+.jeu-memory .overlay-fin {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(13, 13, 26, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: var(--espace-md);
+  animation: overlayEntree 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.jeu-memory .overlay-fin__carte {
+  background-color: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-lg);
+  padding: var(--espace-xl);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-md);
+  text-align: center;
+}
+
+.jeu-memory .overlay-fin__titre {
+  font-size: var(--taille-texte-2xl);
+  color: var(--couleur-succes);
+}
+
+.jeu-memory .overlay-fin__stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-xs);
+}
+
+.jeu-memory .overlay-fin__ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--espace-xs) var(--espace-sm);
+  background-color: var(--couleur-fond);
+  border-radius: var(--rayon-sm);
+  font-size: var(--taille-texte-sm);
+}
+
+.jeu-memory .overlay-fin__ligne span:last-child {
+  font-weight: 700;
+  color: var(--couleur-accent);
+}
+
+.jeu-memory .overlay-fin__ligne--record span:last-child {
+  color: var(--couleur-succes);
+}
+
+.jeu-memory .overlay-fin__boutons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-sm);
+}
+
+.jeu-memory .overlay-fin__boutons .btn {
+  width: 100%;
+}
+
+/* =====================================================
+   Responsive
+   ===================================================== */
+
+@media (min-width: 640px) {
+  .jeu-memory .hud {
+    flex-wrap: nowrap;
+    padding: var(--espace-sm) var(--espace-xl);
+  }
+
+  .jeu-memory .hud__profil,
+  .jeu-memory .hud__paires,
+  .jeu-memory .hud__temps,
+  .jeu-memory .hud__score {
+    font-size: var(--taille-texte-base);
+  }
+
+  .jeu-memory .overlay-fin__boutons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .jeu-memory .overlay-fin__boutons .btn {
+    flex: 1;
+    min-width: 100px;
+  }
+}
+
+/* =====================================================
+   Accessibilité — mouvements réduits
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .jeu-memory .carte {
+    animation: none;
+  }
+
+  .jeu-memory .carte__interieur {
+    transition: none;
+  }
+
+  .jeu-memory .carte--trouvee .carte__face,
+  .jeu-memory .carte--incorrecte,
+  .jeu-memory .overlay-fin,
+  .jeu-memory .hud__score--anime,
+  .jeu-memory .hud__temps--tick {
+    animation: none;
+  }
 }
