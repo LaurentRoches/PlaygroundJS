@@ -1,0 +1,74 @@
+.jeu-memory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Grille */
+.plateau-memory {
+  display: grid;
+  grid-template-columns: repeat(var(--colonnes-memory), 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+/* Conteneur carte avec perspective 3D */
+.carte {
+  perspective: 1000px;
+  cursor: pointer;
+  aspect-ratio: 2 / 3;
+}
+
+/* Intérieur pivotant */
+.carte__interieur {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+
+/* Dos et face : superposées, backface cachée */
+.carte__dos,
+.carte__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.carte__dos img,
+.carte__face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* La face est pré-tournée à 180deg : invisible par défaut */
+.carte__face {
+  transform: rotateY(180deg);
+  background-color: #fff;
+}
+
+/* Retournement : montre la face, cache le dos */
+.carte--retournee .carte__interieur {
+  transform: rotateY(180deg);
+}
+
+/* Carte trouvée : légère surbrillance */
+.carte--trouvee .carte__interieur {
+  transform: rotateY(180deg);
+}
+
+.carte--trouvee .carte__face {
+  background-color: #e8f8e8;
+}
+
+/* Verrouillage : désactive les clics */
+.carte--verrouillee {
+  pointer-events: none;
+}
