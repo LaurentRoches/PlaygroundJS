@@ -5,6 +5,7 @@ export default class Score {
     jeuId,
     points,
     niveau = 1,
+    details = null,
     date = new Date().toISOString(),
   } = {}) {
     this.id = id ?? `score_${Date.now()}_${Math.random().toString(36).slice(2)}`;
@@ -12,6 +13,7 @@ export default class Score {
     this.jeuId = jeuId;
     this.points = points;
     this.niveau = niveau;
+    this.details = details;
     this.date = date;
   }
 }

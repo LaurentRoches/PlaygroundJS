@@ -75,8 +75,9 @@ export default class Jeu {
       this._surScoreChange?.(this._score);
     };
 
-    this._moteur.surPaireIncorrecte = () => {
+    this._moteur.surPaireIncorrecte = (carte1, carte2) => {
       this._plateau.verrouillerTout();
+      this._plateau.signalerIncorrect(carte1.id, carte2.id);
       setTimeout(() => this._plateau.deverrouillerTout(), DUREE_AFFICHAGE_PAIRE_INCORRECTE);
     };
 
