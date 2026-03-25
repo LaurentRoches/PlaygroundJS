@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(mkdir -p \"c:/Users/roche/Documents/RochesWebStudio/PlaygroundJS/.claude/skills/prof\")",
+      "Bash(cp \"c:/Users/roche/Documents/RochesWebStudio/PlaygroundJS/.claude/skills/prof.md\" \"c:/Users/roche/Documents/RochesWebStudio/PlaygroundJS/.claude/skills/prof/SKILL.md\")",
+      "Bash(rm \"c:/Users/roche/Documents/RochesWebStudio/PlaygroundJS/.claude/skills/prof.md\")"
+    ]
+  }
+}
