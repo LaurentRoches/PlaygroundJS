@@ -3,7 +3,6 @@ import {
     JETON_IA,
     JETON_JOUEUR,
     JETON_VIDE, 
-    LIGNES, 
     SCORE_INFINI_NEGATIF,
     SCORE_INFINI_POSITIF
 } from "./constantesPuissance4.js";
@@ -22,11 +21,11 @@ export default class IAMinimax {
         let ligneChoisi = 0;
         for (let colonne = 0; colonne < COLONNES; colonne++) {
             let scoreActuel = 0;
-            if (this.colonneJouable(colonne)) {
-                let ligneJouable = this.ligneJouable(colonne);
+            if (this.plateau.colonneJouable(colonne)) {
+                let ligneJouable = this.plateau.ligneJouable(colonne);
                 if (ligneJouable != false) {
                     this.plateau.placerJeton(ligneJouable, colonne, JETON_IA);
-                    let nextProfondeur = profondeur - 1;
+                    let nextProfondeur = this.profondeur - 1;
                     scoreActuel = this.minimax(nextProfondeur, false);
                     if (scoreActuel > meilleurScore) {
                         meilleurScore = scoreActuel
@@ -48,13 +47,13 @@ export default class IAMinimax {
         } else {
             if (this.detecteurVictoire.verifierVictoire(JETON_JOUEUR)) return SCORE_INFINI_NEGATIF;
         }
-        if (this.estGrillePleine()) return 0;
+        if (this.plateau.estGrillePleine()) return 0;
 
         if (estTourIA) {
             let meilleurScore = SCORE_INFINI_NEGATIF;
             for (let colonne = 0; colonne < COLONNES; colonne++) {
                 let scoreColonne = 0;
-                let ligneJouable = this.ligneJouable(colonne);
+                let ligneJouable = this.plateau.ligneJouable(colonne);
                 if (ligneJouable != false) {
                     this.plateau.placerJeton(ligneJouable, colonne, JETON_IA);
                     let nextProfondeur = profondeur - 1;
@@ -70,7 +69,7 @@ export default class IAMinimax {
             let meilleurScore = SCORE_INFINI_POSITIF;
             for (let colonne = 0; colonne < COLONNES; colonne++) {
                 let scoreColonne = 0;
-                let ligneJouable = this.ligneJouable(colonne);
+                let ligneJouable = this.plateau.ligneJouable(colonne);
                 if (ligneJouable != false) {
                     this.plateau.placerJeton(ligneJouable, colonne, JETON_JOUEUR);
                     let nextProfondeur = profondeur - 1;
@@ -83,25 +82,5 @@ export default class IAMinimax {
             }
             return meilleurScore;
         }
-    }
-
-    colonneJouable (colonne) {
-        return (this.plateau.grille[0][colonne] == JETON_VIDE);
-    }
-
-    estGrillePleine () {
-        for (let colonne = 0; colonne < COLONNES; colonne++) {
-            if (this.colonneJouable(colonne)) return false;
-        }
-        return true;
-    }
-
-    ligneJouable (colonne) {
-        for (let ligne = (LIGNES - 1); ligne >= 0; ligne--) {
-            if (this.plateau.grille[ligne][colonne] == JETON_VIDE) {
-                return ligne;
-            }
-        }
-        return false;
     }
 }
