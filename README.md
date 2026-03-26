@@ -6,12 +6,12 @@ Collection de mini-jeux développés en **Vanilla JS / HTML / CSS**, sans framew
 
 | Jeu | Phase | État |
 |-----|-------|------|
-| Snake | 1 | En cours |
-| Memory | 2 | À venir |
+| Snake | 1 | Fonctionnel |
+| Memory | 2 | Fonctionnel |
 | Jeu de la Vie | 3 | À venir |
 | Sokoban | 4 | À venir |
 | Démineur | 5 | À venir |
-| Puissance 4 | 6 | À venir |
+| Puissance 4 | 6 | En cours |
 | Tetris | 7 | À venir |
 
 ## Fonctionnalités transversales
