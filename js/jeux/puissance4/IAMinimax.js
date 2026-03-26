@@ -54,15 +54,13 @@ export default class IAMinimax {
             for (let colonne = 0; colonne < COLONNES; colonne++) {
                 let scoreColonne = 0;
                 let ligneJouable = this.plateau.ligneJouable(colonne);
-                if (ligneJouable != false) {
-                    this.plateau.placerJeton(ligneJouable, colonne, JETON_IA);
-                    let nextProfondeur = profondeur - 1;
-                    scoreColonne = this.minimax(nextProfondeur, false);
-                    if (scoreColonne > meilleurScore) {
-                        meilleurScore = scoreColonne;
-                    }
-                    this.plateau.placerJeton(ligneJouable, colonne, JETON_VIDE);
+                this.plateau.placerJeton(ligneJouable, colonne, JETON_IA);
+                let nextProfondeur = profondeur - 1;
+                scoreColonne = this.minimax(nextProfondeur, false);
+                if (scoreColonne > meilleurScore) {
+                    meilleurScore = scoreColonne;
                 }
+                this.plateau.placerJeton(ligneJouable, colonne, JETON_VIDE);
             }
             return meilleurScore;
         } else {
@@ -70,15 +68,13 @@ export default class IAMinimax {
             for (let colonne = 0; colonne < COLONNES; colonne++) {
                 let scoreColonne = 0;
                 let ligneJouable = this.plateau.ligneJouable(colonne);
-                if (ligneJouable != false) {
-                    this.plateau.placerJeton(ligneJouable, colonne, JETON_JOUEUR);
-                    let nextProfondeur = profondeur - 1;
-                    scoreColonne = this.minimax(nextProfondeur, true);
-                    if (scoreColonne < meilleurScore) {
-                        meilleurScore = scoreColonne;
-                    }
-                    this.plateau.placerJeton(ligneJouable, colonne, JETON_VIDE);
+                this.plateau.placerJeton(ligneJouable, colonne, JETON_JOUEUR);
+                let nextProfondeur = profondeur - 1;
+                scoreColonne = this.minimax(nextProfondeur, true);
+                if (scoreColonne < meilleurScore) {
+                    meilleurScore = scoreColonne;
                 }
+                this.plateau.placerJeton(ligneJouable, colonne, JETON_VIDE);
             }
             return meilleurScore;
         }
