@@ -32,6 +32,9 @@ export const SCORES_MENACE_ADVERSE  = {
 };
 export const SCORE_COLONNE_CENTRE  = 30;
 
+export const SCORE_INFINI_NEGATIF = -Infinity;
+export const SCORE_INFINI_POSITIF = +Infinity;
+
 export const CSS_PLATEAU = 'plateau';
 export const CSS_JETON_VIDE = 'jeton--vide';
 export const CSS_JETON_IA = 'jeton--ia';
