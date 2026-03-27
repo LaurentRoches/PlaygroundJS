@@ -26,7 +26,6 @@ export default class JeuMemory extends InterfaceJeu {
     this._wrapper.className = 'jeu-memory';
     this._elementConteneur.appendChild(this._wrapper);
 
-    // Création du Jeu avec callbacks forward-declared (?.() = safe avant que _memoryUI soit défini)
     this._jeu = new Jeu(this._wrapper, {
       difficulte: this._cleDifficulte,
       surFinDePartie: (resultat) => {
@@ -35,7 +34,6 @@ export default class JeuMemory extends InterfaceJeu {
         this._changerEtat(ETATS_JEU.TERMINE);
       },
       surScoreChange: (score) => {
-        // mettreAJourScore met aussi à jour le timer via _pulserTemps()
         this._memoryUI?.mettreAJourScore(score);
         this.surScoreChange?.(score);
       },
@@ -45,7 +43,7 @@ export default class JeuMemory extends InterfaceJeu {
       this._wrapper,
       this._jeu,
       this._options.depotScores        ?? null,
-      null, // profil défini plus tard via SelecteurProfil
+      null,
       {
         surRetourMenu:       () => { window.location.hash = '#accueil'; },
         gestionnaireProfils: this._options.gestionnaireProfils ?? null,
@@ -67,7 +65,6 @@ export default class JeuMemory extends InterfaceJeu {
   }
 
   demarrer() {
-    // Sélection du profil avant de lancer le jeu (même pattern que JeuSnake)
     this._selecteur = new SelecteurProfil(
       this._wrapper,
       this._options.gestionnaireProfils ?? null,

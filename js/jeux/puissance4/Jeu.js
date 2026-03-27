@@ -20,28 +20,26 @@ export default class Jeu {
     jouerCoupJoueur (colonne) {
         if (this.estTourIA) return false;
         if (!this.plateau.colonneJouable(colonne)) return false;
-        let ligneJouable = this.plateau.ligneJouable(colonne);
-        this.plateau.placerJeton(ligneJouable, colonne, JETON_JOUEUR);
-        if (this.detecteurVictoire.verifierVictoire(JETON_JOUEUR)) return this.terminerPartie(JETON_JOUEUR);
-        if (this.plateau.estGrillePleine()) return this.terminerPartie(JETON_VIDE)
-        this.jouerCoupIA();
+        let ligne = this.plateau.ligneJouable(colonne);
+        this.plateau.placerJeton(ligne, colonne, JETON_JOUEUR);
+        if (this.detecteurVictoire.verifierVictoire(JETON_JOUEUR)) return this.terminerPartie(ligne, colonne, JETON_JOUEUR);
+        if (this.plateau.estGrillePleine()) return this.terminerPartie(ligne, colonne, JETON_VIDE);
+        return { ligne, colonne, resultat: null };
     }
 
     jouerCoupIA () {
         this.estTourIA = true;
         let coordonneesCoup = this.iaMinimax.choisirProchainCoup();
-        this.plateau.placerJeton(coordonneesCoup.ligneChoisi, coordonneesCoup.colonneChoisi, JETON_IA);
-        if (this.detecteurVictoire.verifierVictoire(JETON_IA)) return this.terminerPartie(JETON_IA);
-        if (this.plateau.estGrillePleine()) return this.terminerPartie(JETON_VIDE)
-        this.finDeTour();
+        let ligne = coordonneesCoup.ligneChoisi;
+        let colonne = coordonneesCoup.colonneChoisi
+        this.plateau.placerJeton(ligne, colonne, JETON_IA);
+        if (this.detecteurVictoire.verifierVictoire(JETON_IA)) return this.terminerPartie(ligne, colonne, JETON_IA);
+        if (this.plateau.estGrillePleine()) return this.terminerPartie(ligne, colonne, JETON_VIDE);
+        return {ligne, colonne, resultat: null };
     }
 
-    finDeTour() {
+    terminerPartie (ligne, colonne, gagnant) {
         this.estTourIA = false;
-    }
-
-    terminerPartie (gagnant) {
-        this.estTourIA = false;
-        return gagnant;
+        return {ligne, colonne, resultat: gagnant};
     }
 }
